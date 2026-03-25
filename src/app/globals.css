@@ -30,7 +30,15 @@ html, body {
   height: 100%;
   background: var(--bg);
   color: var(--fg);
+}
+
+body {
   overflow: hidden;
+}
+
+::selection {
+  background: var(--palette-1);
+  color: var(--fg);
 }
 
 @keyframes fadeUp {

@@ -19,6 +19,8 @@ function applyPalette(index: number) {
   });
 }
 
+let freshPageLoad = true;
+
 export default function GeoCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef<Mode>("delaunay");
@@ -26,26 +28,55 @@ export default function GeoCanvas() {
   const [mode, setMode] = useState<Mode>("delaunay");
   const [paletteIndex, setPaletteIndex] = useState(0);
   const [hintVisible, setHintVisible] = useState(true);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const randomPalette = Math.floor(Math.random() * palettes.length);
-    setPaletteIndex(randomPalette);
-    paletteRef.current = randomPalette;
-    applyPalette(randomPalette);
+    const storedPalette = sessionStorage.getItem("palette");
+    let palette: number;
+    if (freshPageLoad) {
+      const prev = storedPalette !== null ? parseInt(storedPalette, 10) : -1;
+      palette = (prev + 1) % palettes.length;
+    } else {
+      palette = storedPalette !== null ? parseInt(storedPalette, 10) : 0;
+    }
+    setPaletteIndex(palette);
+    paletteRef.current = palette;
+    applyPalette(palette);
+    sessionStorage.setItem("palette", String(palette));
 
-    const randomMode: Mode = Math.random() < 0.5 ? "delaunay" : "voronoi";
-    setMode(randomMode);
-    modeRef.current = randomMode;
+    const storedMode = sessionStorage.getItem("mode") as Mode | null;
+    let initial: Mode;
+    if (freshPageLoad) {
+      initial = storedMode === "delaunay" ? "voronoi" : "delaunay";
+    } else {
+      initial = storedMode ?? "delaunay";
+    }
+    setMode(initial);
+    modeRef.current = initial;
+    sessionStorage.setItem("mode", initial);
+
+    freshPageLoad = false;
+    setReady(true);
   }, []);
 
-  useEffect(() => {
-    modeRef.current = mode;
-  }, [mode]);
+  function cyclePalette() {
+    setPaletteIndex((i) => {
+      const next = (i + 1) % palettes.length;
+      paletteRef.current = next;
+      applyPalette(next);
+      sessionStorage.setItem("palette", String(next));
+      return next;
+    });
+  }
 
-  useEffect(() => {
-    paletteRef.current = paletteIndex;
-    applyPalette(paletteIndex);
-  }, [paletteIndex]);
+  function toggleMode() {
+    setMode((m) => {
+      const next = m === "delaunay" ? "voronoi" : "delaunay";
+      modeRef.current = next;
+      sessionStorage.setItem("mode", next);
+      return next;
+    });
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -277,12 +308,10 @@ export default function GeoCanvas() {
 
   return (
     <>
-      <canvas ref={canvasRef} className="fixed inset-0 z-0 cursor-crosshair" />
-      <div className="pointer-events-auto fixed top-5 right-5 z-20 flex items-center gap-2.5">
+      <canvas ref={canvasRef} className={`fixed inset-0 z-0 cursor-crosshair transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} />
+      <div className={`pointer-events-auto fixed top-5 right-5 z-20 flex items-center gap-2.5 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
         <button
-          onClick={() =>
-            setPaletteIndex((i) => (i + 1) % palettes.length)
-          }
+          onClick={cyclePalette}
           className="group flex cursor-pointer items-center gap-2 rounded border border-fg-muted bg-transparent px-2 py-1.5 transition-all duration-300 hover:border-accent/40"
         >
           <span className="flex gap-0.5">
@@ -299,9 +328,7 @@ export default function GeoCanvas() {
           </span>
         </button>
         <button
-          onClick={() =>
-            setMode((m) => (m === "delaunay" ? "voronoi" : "delaunay"))
-          }
+          onClick={toggleMode}
           className="cursor-pointer rounded border border-fg-muted bg-transparent px-2.5 py-1.5 font-mono text-[0.6rem] tracking-[0.06em] text-fg-dim transition-all duration-300 hover:border-accent/40 hover:text-accent"
         >
           {mode === "delaunay" ? "voronoi" : "delaunay"}
