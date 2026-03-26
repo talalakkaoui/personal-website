@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import type { Point, Pulse, Mode } from "./geometry/types";
 import { BASE_N, MAX_PTS } from "./geometry/types";
 import { triangulateRaw } from "./geometry/delaunay";
@@ -30,6 +31,8 @@ export default function GeoCanvas() {
   const [paletteIndex, setPaletteIndex] = useState(0);
   const [hintVisible, setHintVisible] = useState(true);
   const [ready, setReady] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const storedPalette = sessionStorage.getItem("palette");
@@ -339,7 +342,7 @@ export default function GeoCanvas() {
         </button>
       </div>
       <div
-        className={`fixed bottom-7 left-1/2 z-20 -translate-x-1/2 pointer-events-none font-mono text-[0.55rem] tracking-[0.08em] text-fg-muted max-[480px]:hidden transition-opacity duration-500 ${hintVisible ? "fade-in-hint" : "opacity-0"}`}
+        className={`fixed bottom-7 left-1/2 z-20 -translate-x-1/2 pointer-events-none font-mono text-[0.55rem] tracking-[0.08em] text-fg-muted max-[480px]:hidden transition-opacity duration-500 ${isHome && hintVisible ? "fade-in-hint" : "opacity-0"}`}
       >
         click anywhere to refine mesh
       </div>
