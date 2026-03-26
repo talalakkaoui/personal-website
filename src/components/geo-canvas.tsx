@@ -6,6 +6,7 @@ import { BASE_N, MAX_PTS } from "./geometry/types";
 import { triangulateRaw } from "./geometry/delaunay";
 import { computeVoronoiData } from "./geometry/voronoi";
 import { palettes } from "./palette/palettes";
+import ContactButton from "./contact-button";
 
 function rgbToHex(r: number, g: number, b: number): string {
   return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
@@ -309,7 +310,10 @@ export default function GeoCanvas() {
   return (
     <>
       <canvas ref={canvasRef} className={`fixed inset-0 z-0 cursor-crosshair transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} />
-      <div className={`pointer-events-auto fixed top-5 right-5 z-20 flex items-center gap-2.5 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
+      <div className={`pointer-events-auto fixed top-5 right-5 z-20 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
+        <ContactButton />
+      </div>
+      <div className={`pointer-events-auto fixed top-5 left-5 z-20 flex items-center gap-2.5 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
         <button
           onClick={cyclePalette}
           className="group flex cursor-pointer items-center gap-2 rounded border border-fg-muted bg-transparent px-2 py-1.5 transition-all duration-300 hover:border-accent/40"
