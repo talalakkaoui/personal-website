@@ -52,8 +52,9 @@ export default function Bio() {
                 finance of the BouT student association, collaborated with
                 Octatube Engineering, and competed in intramural basketball.
                 During my final year, I moved to Munich to partner with BMW
-                Group on my master&apos;s thesis, developing a computational geometry and FEA pipeline to optimize component designs for additive manufacturing repair. I graduated
-                Cum Laude.
+                Group on my master&apos;s thesis, developing a computational 
+                geometry and FEA pipeline to optimize component designs for 
+                additive manufacturing repair. I graduated Cum Laude.
               </p>
               <p>
                 Since returning to Toronto in 2024, I&apos;ve worked as a

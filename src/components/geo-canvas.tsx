@@ -313,33 +313,33 @@ export default function GeoCanvas() {
   return (
     <>
       <canvas ref={canvasRef} className={`fixed inset-0 z-0 cursor-crosshair transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} />
-      <div className={`pointer-events-auto fixed top-5 right-5 z-20 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
+      <div className={`pointer-events-auto fixed top-5 left-5 right-5 z-20 flex items-center justify-between transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={cyclePalette}
+            className="group flex cursor-pointer items-center gap-2 rounded border border-fg-muted bg-transparent px-2 py-1.5 transition-all duration-300 hover:border-accent/40"
+          >
+            <span className="flex gap-0.5">
+              {currentPalette.colors.map((rgb, i) => (
+                <span
+                  key={i}
+                  className="h-2 w-2 rounded-full transition-colors duration-300"
+                  style={{ backgroundColor: rgbToHex(...rgb) }}
+                />
+              ))}
+            </span>
+            <span className="font-mono text-[0.5rem] tracking-[0.06em] text-fg-dim transition-colors duration-300 group-hover:text-accent">
+              {currentPalette.name.toLowerCase()}
+            </span>
+          </button>
+          <button
+            onClick={toggleMode}
+            className="cursor-pointer rounded border border-fg-muted bg-transparent px-2.5 py-1.5 font-mono text-[0.6rem] tracking-[0.06em] text-fg-dim transition-all duration-300 hover:border-accent/40 hover:text-accent"
+          >
+            {mode === "delaunay" ? "voronoi" : "delaunay"}
+          </button>
+        </div>
         <ContactButton />
-      </div>
-      <div className={`pointer-events-auto fixed top-5 left-5 z-20 flex items-center gap-2.5 transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}>
-        <button
-          onClick={cyclePalette}
-          className="group flex cursor-pointer items-center gap-2 rounded border border-fg-muted bg-transparent px-2 py-1.5 transition-all duration-300 hover:border-accent/40"
-        >
-          <span className="flex gap-0.5">
-            {currentPalette.colors.map((rgb, i) => (
-              <span
-                key={i}
-                className="h-2 w-2 rounded-full transition-colors duration-300"
-                style={{ backgroundColor: rgbToHex(...rgb) }}
-              />
-            ))}
-          </span>
-          <span className="font-mono text-[0.5rem] tracking-[0.06em] text-fg-dim transition-colors duration-300 group-hover:text-accent">
-            {currentPalette.name.toLowerCase()}
-          </span>
-        </button>
-        <button
-          onClick={toggleMode}
-          className="cursor-pointer rounded border border-fg-muted bg-transparent px-2.5 py-1.5 font-mono text-[0.6rem] tracking-[0.06em] text-fg-dim transition-all duration-300 hover:border-accent/40 hover:text-accent"
-        >
-          {mode === "delaunay" ? "voronoi" : "delaunay"}
-        </button>
       </div>
       <div
         className={`fixed bottom-7 left-1/2 z-20 -translate-x-1/2 pointer-events-none font-mono text-[0.55rem] tracking-[0.08em] text-fg-muted max-[480px]:hidden transition-opacity duration-500 ${isHome && hintVisible ? "fade-in-hint" : "opacity-0"}`}

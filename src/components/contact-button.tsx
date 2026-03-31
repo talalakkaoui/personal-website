@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Mail } from "lucide-react";
 
 const EMAIL = "talalakkaoui@gmail.com";
 
@@ -31,9 +32,10 @@ export default function ContactButton() {
           setOpen(true);
           setCopied(false);
         }}
-        className="shrink-0 rounded-full border border-fg-muted px-4 py-1.5 font-mono text-[0.72rem] tracking-[0.04em] text-fg-dim transition-all duration-300 hover:border-palette-1/40 hover:bg-palette-1/[0.06] hover:text-palette-1"
+        className="shrink-0 flex items-center gap-1.5 rounded border border-fg-muted px-2 py-1.5 min-[463px]:px-4 font-mono text-[0.72rem] tracking-[0.04em] text-fg-dim transition-all duration-300 hover:border-accent/40 hover:bg-accent/[0.06] hover:text-accent"
       >
-        Get in Touch
+        <Mail size={14} />
+        <span className="hidden min-[463px]:inline">Get in Touch</span>
       </button>
 
       {open && (
